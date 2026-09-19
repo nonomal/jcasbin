@@ -1,20 +1,25 @@
-// Copyright 2018 The casbin Authors. All Rights Reserved.
+// Licensed to the Apache Software Foundation (ASF) under one
+// or more contributor license agreements. See the NOTICE file
+// distributed with this work for additional information
+// regarding copyright ownership. The ASF licenses this file
+// to you under the Apache License, Version 2.0 (the
+// "License"); you may not use this file except in compliance
+// with the License. You may obtain a copy of the License at
 //
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
+//     https://www.apache.org/licenses/LICENSE-2.0
 //
-//      http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+// Unless required by applicable law or agreed to in writing,
+// software distributed under the License is distributed on an
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// KIND, either express or implied. See the License for the
+// specific language governing permissions and limitations
+// under the License.
 
 package org.casbin.jcasbin.main;
 
+import org.casbin.jcasbin.exception.CasbinEmptyConditionException;
 import org.casbin.jcasbin.exception.CasbinNameNotExistException;
+import org.casbin.jcasbin.exception.CasbinObjConditionException;
 import org.casbin.jcasbin.model.Assertion;
 import org.casbin.jcasbin.model.FunctionMap;
 import org.casbin.jcasbin.model.Model;
@@ -52,7 +57,18 @@ public class Enforcer extends ManagementEnforcer {
      * @param adapter the adapter.
      */
     public Enforcer(String modelPath, Adapter adapter) {
-        this(newModel(modelPath, ""), adapter);
+        this(modelPath, adapter, true);
+    }
+
+    /**
+     * Enforcer initializes an enforcer with a database adapter and an enable log flag.
+     *
+     * @param modelPath the path of the model file.
+     * @param adapter   the adapter.
+     * @param enableLog whether to enable Casbin's log.
+     */
+    public Enforcer(String modelPath, Adapter adapter, boolean enableLog) {
+        this(newModel(modelPath, ""), adapter, enableLog);
         this.modelPath = modelPath;
     }
 
@@ -643,5 +659,51 @@ public class Enforcer extends ManagementEnforcer {
             results.add(result);
         }
         return results;
+    }
+
+    /**
+     * getAllowedObjectConditions returns a list of object conditions that the user can access.
+     * For example: conditions = e.getAllowedObjectConditions("alice", "read", "r.obj.")
+     * Note:
+     * <p>
+     * 0. prefix: You can customize the prefix of the object conditions, and "r.obj." is commonly used as a prefix.
+     * After removing the prefix, the remaining part is the condition of the object.
+     * If there is an obj policy that does not meet the prefix requirement, a CasbinObjConditionException will be thrown.
+     * <p>
+     * 1. If the 'objectConditions' list is empty, throw CasbinEmptyConditionException
+     * This exception is thrown because some data adapters' ORM return full table data by default
+     * when they receive an empty condition, which tends to behave contrary to expectations.(e.g. GORM)
+     * If you are using an adapter that does not behave like this, you can choose to ignore this exception.
+     *
+     * @param user   the user.
+     * @param action the action.
+     * @param prefix the prefix of the object conditions.
+     * @return a list of object conditions.
+     * @throws CasbinObjConditionException if there is a policy that doesn't meet the prefix requirement.
+     * @throws CasbinEmptyConditionException if the objectConditions list is empty.
+     */
+    public List<String> getAllowedObjectConditions(String user, String action, String prefix) {
+        if (user == null || action == null || prefix == null) {
+            throw new IllegalArgumentException("user, action, and prefix cannot be null");
+        }
+        
+        List<List<String>> permissions = getImplicitPermissionsForUser(user);
+        
+        List<String> objectConditions = new ArrayList<>();
+        for (List<String> policy : permissions) {
+            // policy {sub, obj, act}
+            if (policy.size() >= 3 && policy.get(2).equals(action)) {
+                if (!policy.get(1).startsWith(prefix)) {
+                    throw new CasbinObjConditionException("need to meet the prefix required by the object condition");
+                }
+                objectConditions.add(policy.get(1).substring(prefix.length()));
+            }
+        }
+        
+        if (objectConditions.isEmpty()) {
+            throw new CasbinEmptyConditionException("GetAllowedObjectConditions has an empty condition");
+        }
+        
+        return objectConditions;
     }
 }

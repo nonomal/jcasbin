@@ -1,28 +1,33 @@
-// Copyright 2018 The casbin Authors. All Rights Reserved.
+// Licensed to the Apache Software Foundation (ASF) under one
+// or more contributor license agreements. See the NOTICE file
+// distributed with this work for additional information
+// regarding copyright ownership. The ASF licenses this file
+// to you under the Apache License, Version 2.0 (the
+// "License"); you may not use this file except in compliance
+// with the License. You may obtain a copy of the License at
 //
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
+//     https://www.apache.org/licenses/LICENSE-2.0
 //
-//      http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+// Unless required by applicable law or agreed to in writing,
+// software distributed under the License is distributed on an
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// KIND, either express or implied. See the License for the
+// specific language governing permissions and limitations
+// under the License.
 
 package org.casbin.jcasbin.main;
 
 import com.googlecode.aviator.AviatorEvaluator;
 import com.googlecode.aviator.AviatorEvaluatorInstance;
-import org.junit.Assert;
-import org.junit.Test;
+import org.casbin.jcasbin.util.Util;
+import org.testng.Assert;
+import org.testng.annotations.Test;
 
 import java.util.List;
 
 import static java.util.Arrays.asList;
 import static org.casbin.jcasbin.main.TestUtil.*;
+import static org.testng.Assert.assertEquals;
 
 public class ManagementAPIUnitTest {
     @Test
@@ -231,7 +236,7 @@ public class ManagementAPIUnitTest {
 
         // Test addGroupingPoliciesEx - should add only new rules (bob and eve), not fail on existing (alice)
         boolean result = e.addGroupingPoliciesEx(groupingRules);
-        Assert.assertTrue("addGroupingPoliciesEx should return true", result);
+        Assert.assertTrue(result, "addGroupingPoliciesEx should return true");
         testGetRoles(e, "alice", asList("data2_admin"));
         testGetRoles(e, "bob", asList("data1_admin"));
         testGetRoles(e, "eve", asList("data3_admin"));
@@ -248,7 +253,7 @@ public class ManagementAPIUnitTest {
         );
 
         result = e.addGroupingPoliciesEx(groupingRulesList);
-        Assert.assertTrue("addGroupingPoliciesEx with List should return true", result);
+        Assert.assertTrue(result, "addGroupingPoliciesEx with List should return true");
         testGetRoles(e, "alice", asList("data2_admin"));
         testGetRoles(e, "bob", asList("data1_admin"));
         testGetRoles(e, "ham", asList("data4_admin"));
@@ -259,7 +264,7 @@ public class ManagementAPIUnitTest {
 
         // Test addNamedGroupingPoliciesEx with List<List<String>>
         result = e.addNamedGroupingPoliciesEx("g", groupingRulesList);
-        Assert.assertTrue("addNamedGroupingPoliciesEx with List should return true", result);
+        Assert.assertTrue(result, "addNamedGroupingPoliciesEx with List should return true");
         testGetRoles(e, "alice", asList("data2_admin"));
         testGetRoles(e, "bob", asList("data1_admin"));
         testGetRoles(e, "ham", asList("data4_admin"));
@@ -270,7 +275,7 @@ public class ManagementAPIUnitTest {
 
         // Test addNamedGroupingPoliciesEx with String[][]
         result = e.addNamedGroupingPoliciesEx("g", groupingRules);
-        Assert.assertTrue("addNamedGroupingPoliciesEx with String[][] should return true", result);
+        Assert.assertTrue(result, "addNamedGroupingPoliciesEx with String[][] should return true");
         testGetRoles(e, "alice", asList("data2_admin"));
         testGetRoles(e, "bob", asList("data1_admin"));
         testGetRoles(e, "eve", asList("data3_admin"));
@@ -282,7 +287,7 @@ public class ManagementAPIUnitTest {
         AviatorEvaluatorInstance instance = null;
         Enforcer enforcer = new Enforcer();
         // when
-        Assert.assertThrows("The aviator evaluator cannot be null.", NullPointerException.class,
+        Assert.assertThrows(NullPointerException.class,
             () -> enforcer.setAviatorEvaluator(instance));
     }
 
@@ -294,7 +299,41 @@ public class ManagementAPIUnitTest {
         // when
         enforcer.setAviatorEvaluator(instance);
         // then
-        Assert.assertEquals(instance, enforcer.getAviatorEval());
+        assertEquals(enforcer.getAviatorEval(), instance);
+    }
+
+    @Test
+    public void testGetAllUsers() {
+        // Basic RBAC: alice and bob are users, data2_admin is a role
+        Enforcer e = new Enforcer("examples/rbac_model.conf", "examples/rbac_policy.csv");
+        assertUserSet(e.getAllSubjects(), asList("alice", "bob", "data2_admin"));
+        assertUserSet(e.getAllRoles(), asList("data2_admin"));
+        assertUserSet(e.getAllUsers(), asList("alice", "bob"));
+
+        // Add a regular user who only appears in policy, not as a role target
+        e.addPolicy("eve", "data3", "read");
+        assertUserSet(e.getAllUsers(), asList("alice", "bob", "eve"));
+        e.removePolicy("eve", "data3", "read");
+
+        // A subject who is also a role target: admin is in p AND assigned to role "root" via g
+        // getAllUsers = subjects(p) - roles(g col 1); admin is not in g col 1, so it is a user
+        e.addPolicy("admin", "data1", "read");
+        e.addGroupingPolicy("admin", "root");
+        assertUserSet(e.getAllUsers(), asList("alice", "bob", "admin"));
+        e.removePolicy("admin", "data1", "read");
+        e.removeGroupingPolicy("admin", "root");
+
+        // After clearing all policies, everything should be empty
+        e.clearPolicy();
+        assertUserSet(e.getAllSubjects(), asList());
+        assertUserSet(e.getAllRoles(), asList());
+        assertUserSet(e.getAllUsers(), asList());
+    }
+
+    private void assertUserSet(List<String> actual, List<String> expected) {
+        if (!Util.setEquals(expected, actual)) {
+            Assert.fail("Expected: " + expected + ", got: " + actual);
+        }
     }
 
 }

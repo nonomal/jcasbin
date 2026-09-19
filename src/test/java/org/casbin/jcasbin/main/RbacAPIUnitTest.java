@@ -1,16 +1,19 @@
-// Copyright 2018 The casbin Authors. All Rights Reserved.
+// Licensed to the Apache Software Foundation (ASF) under one
+// or more contributor license agreements. See the NOTICE file
+// distributed with this work for additional information
+// regarding copyright ownership. The ASF licenses this file
+// to you under the Apache License, Version 2.0 (the
+// "License"); you may not use this file except in compliance
+// with the License. You may obtain a copy of the License at
 //
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
+//     https://www.apache.org/licenses/LICENSE-2.0
 //
-//      http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+// Unless required by applicable law or agreed to in writing,
+// software distributed under the License is distributed on an
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// KIND, either express or implied. See the License for the
+// specific language governing permissions and limitations
+// under the License.
 
 package org.casbin.jcasbin.main;
 
@@ -19,7 +22,7 @@ import org.casbin.jcasbin.rbac.DefaultRoleManager;
 import org.casbin.jcasbin.rbac.DomainManager;
 import org.casbin.jcasbin.util.BuiltInFunctions;
 import org.casbin.jcasbin.util.Util;
-import org.junit.Test;
+import org.testng.annotations.Test;
 
 import java.util.Arrays;
 import java.util.Comparator;
@@ -27,8 +30,8 @@ import java.util.List;
 
 import static java.util.Arrays.asList;
 import static org.casbin.jcasbin.main.TestUtil.*;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.fail;
 
 public class RbacAPIUnitTest {
     @Test
@@ -239,5 +242,63 @@ public class RbacAPIUnitTest {
 
         testGetImplicitUsersForRole(e, "book_group", asList("/book/*", "/book/:id", "/book2/{id}"));
         testGetImplicitUsersForRole(e, "pen_group", asList("/pen/:id", "/pen2/{id}"));
+    }
+
+    @Test
+    public void testGetAllowedObjectConditions() {
+        Enforcer e = new Enforcer("examples/object_conditions_model.conf", "examples/object_conditions_policy.csv");
+        
+        // Test basic cases
+        testGetAllowedObjectConditions(e, "alice", "read", "r.obj.", asList("price < 25", "category_id = 2"));
+        testGetAllowedObjectConditions(e, "admin", "read", "r.obj.", asList("category_id = 2"));
+        testGetAllowedObjectConditions(e, "bob", "write", "r.obj.", asList("author = bob"));
+        
+        // Test null parameter validation
+        testGetAllowedObjectConditionsWithException(e, null, "read", "r.obj.", 
+            IllegalArgumentException.class);
+        testGetAllowedObjectConditionsWithException(e, "alice", null, "r.obj.", 
+            IllegalArgumentException.class);
+        testGetAllowedObjectConditionsWithException(e, "alice", "read", null, 
+            IllegalArgumentException.class);
+        
+        // Test ErrEmptyCondition
+        testGetAllowedObjectConditionsWithException(e, "alice", "write", "r.obj.", 
+            org.casbin.jcasbin.exception.CasbinEmptyConditionException.class);
+        testGetAllowedObjectConditionsWithException(e, "bob", "read", "r.obj.", 
+            org.casbin.jcasbin.exception.CasbinEmptyConditionException.class);
+        
+        // Test ErrObjCondition - policy without proper prefix
+        // should: e.addPolicy("alice", "r.obj.price > 50", "read")
+        boolean ok = e.addPolicy("alice", "price > 50", "read");
+        if (ok) {
+            testGetAllowedObjectConditionsWithException(e, "alice", "read", "r.obj.", 
+                org.casbin.jcasbin.exception.CasbinObjConditionException.class);
+        }
+        
+        // Test with different prefix
+        e.clearPolicy();
+        e.getRoleManager().deleteLink("alice", "admin");
+        e.addPolicies(asList(
+            asList("alice", "r.book.price < 25", "read"),
+            asList("admin", "r.book.category_id = 2", "read"),
+            asList("bob", "r.book.author = bob", "write")
+        ));
+        testGetAllowedObjectConditions(e, "alice", "read", "r.book.", asList("price < 25"));
+        testGetAllowedObjectConditions(e, "admin", "read", "r.book.", asList("category_id = 2"));
+        testGetAllowedObjectConditions(e, "bob", "write", "r.book.", asList("author = bob"));
+    }
+    
+    private void testGetAllowedObjectConditions(Enforcer e, String user, String action, String prefix, List<String> expectedConditions) {
+        List<String> actualConditions = e.getAllowedObjectConditions(user, action, prefix);
+        assertEquals(expectedConditions, actualConditions);
+    }
+    
+    private void testGetAllowedObjectConditionsWithException(Enforcer e, String user, String action, String prefix, Class<? extends RuntimeException> expectedExceptionClass) {
+        try {
+            e.getAllowedObjectConditions(user, action, prefix);
+            fail("Expected exception " + expectedExceptionClass.getName() + " was not thrown");
+        } catch (RuntimeException ex) {
+            assertEquals(ex.getClass(), expectedExceptionClass);
+        }
     }
 }

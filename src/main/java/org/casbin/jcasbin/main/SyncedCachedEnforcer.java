@@ -1,16 +1,19 @@
-// Copyright 2024 The casbin Authors. All Rights Reserved.
+// Licensed to the Apache Software Foundation (ASF) under one
+// or more contributor license agreements. See the NOTICE file
+// distributed with this work for additional information
+// regarding copyright ownership. The ASF licenses this file
+// to you under the Apache License, Version 2.0 (the
+// "License"); you may not use this file except in compliance
+// with the License. You may obtain a copy of the License at
 //
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
+//     https://www.apache.org/licenses/LICENSE-2.0
 //
-//      http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+// Unless required by applicable law or agreed to in writing,
+// software distributed under the License is distributed on an
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// KIND, either express or implied. See the License for the
+// specific language governing permissions and limitations
+// under the License.
 
 package org.casbin.jcasbin.main;
 
@@ -30,7 +33,6 @@ public class SyncedCachedEnforcer extends SyncedEnforcer{
     private Duration expireTime;
     private Cache cache;
     private final AtomicBoolean enableCache = new AtomicBoolean(true);
-    private final static ReadWriteLock READ_WRITE_LOCK = new ReentrantReadWriteLock();
 
     /**
      * Default constructor. Initializes a new SyncedCachedEnforcer with a default cache.
@@ -63,6 +65,18 @@ public class SyncedCachedEnforcer extends SyncedEnforcer{
     }
 
     /**
+     * Initializes an enforcer with a model file, a database adapter, and a logging flag.
+     *
+     * @param modelPath The path of the model file.
+     * @param adapter   The adapter for the database.
+     * @param enableLog Whether to enable logging for Casbin.
+     */
+    public SyncedCachedEnforcer(String modelPath, Adapter adapter, boolean enableLog) {
+        super(modelPath, adapter, enableLog);
+        this.cache = new DefaultCache();
+    }
+
+    /**
      * Initializes an enforcer with a model and a database adapter.
      *
      * @param m       The model.
@@ -70,6 +84,18 @@ public class SyncedCachedEnforcer extends SyncedEnforcer{
      */
     public SyncedCachedEnforcer(Model m, Adapter adapter) {
         super(m, adapter);
+        this.cache = new DefaultCache();
+    }
+
+    /**
+     * Initializes an enforcer with a model, a database adapter, and a logging flag.
+     *
+     * @param m         The model.
+     * @param adapter   The adapter for the database.
+     * @param enableLog Whether to enable logging for Casbin.
+     */
+    public SyncedCachedEnforcer(Model m, Adapter adapter, boolean enableLog) {
+        super(m, adapter, enableLog);
         this.cache = new DefaultCache();
     }
 
@@ -248,10 +274,10 @@ public class SyncedCachedEnforcer extends SyncedEnforcer{
      */
     private Boolean getCachedResult(String key) {
         try {
-            READ_WRITE_LOCK.readLock().lock();
+            getReadWriteLock().readLock().lock();
             return cache.get(key);
         } finally {
-            READ_WRITE_LOCK.readLock().unlock();
+            getReadWriteLock().readLock().unlock();
         }
     }
 
@@ -261,11 +287,11 @@ public class SyncedCachedEnforcer extends SyncedEnforcer{
      * @param expireTime The expiration time.
      */
     public void setExpireTime(Duration expireTime) {
-        READ_WRITE_LOCK.writeLock().lock();
+        getReadWriteLock().writeLock().lock();
         try {
             this.expireTime = expireTime;
         } finally {
-            READ_WRITE_LOCK.writeLock().unlock();
+            getReadWriteLock().writeLock().unlock();
         }
     }
 
@@ -275,11 +301,11 @@ public class SyncedCachedEnforcer extends SyncedEnforcer{
      * @param cache The custom cache.
      */
     public void setCache(Cache cache) {
-        READ_WRITE_LOCK.writeLock().lock();
+        getReadWriteLock().writeLock().lock();
         try {
             this.cache = cache;
         } finally {
-            READ_WRITE_LOCK.writeLock().unlock();
+            getReadWriteLock().writeLock().unlock();
         }
     }
 

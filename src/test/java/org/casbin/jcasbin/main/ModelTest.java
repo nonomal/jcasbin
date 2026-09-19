@@ -1,22 +1,25 @@
-// Copyright 2024 The casbin Authors. All Rights Reserved.
+// Licensed to the Apache Software Foundation (ASF) under one
+// or more contributor license agreements. See the NOTICE file
+// distributed with this work for additional information
+// regarding copyright ownership. The ASF licenses this file
+// to you under the Apache License, Version 2.0 (the
+// "License"); you may not use this file except in compliance
+// with the License. You may obtain a copy of the License at
 //
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
+//     https://www.apache.org/licenses/LICENSE-2.0
 //
-//      http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+// Unless required by applicable law or agreed to in writing,
+// software distributed under the License is distributed on an
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// KIND, either express or implied. See the License for the
+// specific language governing permissions and limitations
+// under the License.
 
 package org.casbin.jcasbin.main;
 
 import org.casbin.jcasbin.config.Config;
 import org.casbin.jcasbin.model.Model;
-import org.junit.Test;
+import org.testng.annotations.Test;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -26,7 +29,7 @@ import java.util.Map;
 
 import static org.casbin.jcasbin.model.Model.requiredSections;
 import static org.casbin.jcasbin.model.Model.sectionNameMap;
-import static org.junit.Assert.*;
+import static org.testng.Assert.*;
 
 public class ModelTest {
 
@@ -95,8 +98,8 @@ public class ModelTest {
         } catch (RuntimeException e) {
             // check for missing sections in message
             for (String rs : requiredSections) {
-                assertTrue("section name: " + sectionNameMap.get(rs) + " should be in message",
-                    e.getMessage().contains(sectionNameMap.get(rs)));
+                assertTrue(e.getMessage().contains(sectionNameMap.get(rs)),
+                    "section name: " + sectionNameMap.get(rs) + " should be in message");
             }
         }
     }
@@ -106,7 +109,7 @@ public class ModelTest {
         Model m = new Model();
         m.loadModelFromConfig(basicConfig);
         for (String sec : requiredSections) {
-            assertTrue(sec + " section was expected in model", m.hasSection(sec));
+            assertTrue(m.hasSection(sec), sec + " section was expected in model");
         }
 
         m = new Model();
@@ -115,7 +118,7 @@ public class ModelTest {
         }catch (RuntimeException e){
         }finally {
             for (String sec : requiredSections) {
-                assertFalse(sec + " section was not expected in model", m.hasSection(sec));
+                assertFalse(m.hasSection(sec), sec + " section was not expected in model");
             }
         }
     }

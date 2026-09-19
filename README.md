@@ -1,31 +1,32 @@
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements. See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership. The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License. You may obtain a copy of the License at
+
+    https://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied. See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
 # jCasbin
 
-[![GitHub Actions](https://github.com/casbin/jcasbin/workflows/build/badge.svg)](https://github.com/casbin/jcasbin/actions)
-[![codecov](https://codecov.io/gh/casbin/jcasbin/branch/master/graph/badge.svg?token=pKOEodQ3q9)](https://codecov.io/gh/casbin/jcasbin)
+[![GitHub Actions](https://github.com/apache/casbin-jcasbin/workflows/build/badge.svg)](https://github.com/apache/casbin-jcasbin/actions)
+[![codecov](https://codecov.io/gh/apache/casbin-jcasbin/branch/master/graph/badge.svg?token=pKOEodQ3q9)](https://codecov.io/gh/apache/casbin-jcasbin)
 [![javadoc](https://javadoc.io/badge2/org.casbin/jcasbin/javadoc.svg)](https://javadoc.io/doc/org.casbin/jcasbin)
 [![Maven Central](https://img.shields.io/maven-central/v/org.casbin/jcasbin.svg)](https://mvnrepository.com/artifact/org.casbin/jcasbin/latest)
-[![Release](https://img.shields.io/github/release/casbin/jcasbin.svg)](https://github.com/casbin/jcasbin/releases/latest)
+[![Release](https://img.shields.io/github/release/apache/casbin-jcasbin.svg)](https://github.com/apache/casbin-jcasbin/releases/latest)
 [![Discord](https://img.shields.io/discord/1022748306096537660?logo=discord&label=discord&color=5865F2)](https://discord.gg/S5UjpzGZjN)
 
-<p align="center">
-  <sup>Sponsored by</sup>
-  <br>
-  <a href="https://stytch.com/docs?utm_source=oss-sponsorship&utm_medium=paid_sponsorship&utm_campaign=casbin">
-    <picture>
-      <source media="(prefers-color-scheme: dark)" srcset="https://cdn.casbin.org/img/stytch-white.png">
-      <source media="(prefers-color-scheme: light)" srcset="https://cdn.casbin.org/img/stytch-charcoal.png">
-      <img src="https://cdn.casbin.org/img/stytch-charcoal.png" width="275">
-    </picture>
-  </a><br/>
-  <a href="https://stytch.com/docs?utm_source=oss-sponsorship&utm_medium=paid_sponsorship&utm_campaign=casbin"><b>Build auth with fraud prevention, faster.</b><br/> Try Stytch for API-first authentication, user & org management, multi-tenant SSO, MFA, device fingerprinting, and more.</a>
-  <br>
-</p>
-
-💖 [**Looking for an open-source identity and access management solution like Okta, Auth0, Keycloak ? Learn more about: Casdoor**](https://casdoor.org/)
-
-<a href="https://casdoor.org/"><img src="https://user-images.githubusercontent.com/3787410/147868267-6ac74908-5654-4f9c-ac79-8852af9ff925.png" alt="casdoor" style="width: 50%; height: 50%"/></a>
-
-**News**: still worry about how to write the correct jCasbin policy? `Casbin online editor` is coming to help! Try it at: https://casbin.org/editor/
+**News**: still worry about how to write the correct jCasbin policy? `Casbin online editor` is coming to help! Try it at: https://casbin.apache.org/editor/
 
 ![casbin Logo](casbin-logo.png)
 
@@ -33,12 +34,12 @@ jCasbin is a powerful and efficient open-source access control library for Java 
 
 ## All the languages supported by Casbin:
 
-| [![golang](https://casbin.org/img/langs/golang.png)](https://github.com/casbin/casbin) | [![java](https://casbin.org/img/langs/java.png)](https://github.com/casbin/jcasbin) | [![nodejs](https://casbin.org/img/langs/nodejs.png)](https://github.com/casbin/node-casbin) | [![php](https://casbin.org/img/langs/php.png)](https://github.com/php-casbin/php-casbin) |
+| [![golang](https://casbin.apache.org/img/langs/golang.png)](https://github.com/casbin/casbin) | [![java](https://casbin.apache.org/img/langs/java.png)](https://github.com/apache/casbin-jcasbin) | [![nodejs](https://casbin.apache.org/img/langs/nodejs.png)](https://github.com/casbin/node-casbin) | [![php](https://casbin.apache.org/img/langs/php.png)](https://github.com/php-casbin/php-casbin) |
 |----------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------|
-| [Casbin](https://github.com/casbin/casbin)                                             | [jCasbin](https://github.com/casbin/jcasbin)                                        | [node-Casbin](https://github.com/casbin/node-casbin)                                        | [PHP-Casbin](https://github.com/php-casbin/php-casbin)                                   |
+| [Casbin](https://github.com/casbin/casbin)                                             | [jCasbin](https://github.com/apache/casbin-jcasbin)                                        | [node-Casbin](https://github.com/casbin/node-casbin)                                        | [PHP-Casbin](https://github.com/php-casbin/php-casbin)                                   |
 | production-ready                                                                       | production-ready                                                                    | production-ready                                                                            | production-ready                                                                         |
 
-| [![python](https://casbin.org/img/langs/python.png)](https://github.com/casbin/pycasbin) | [![dotnet](https://casbin.org/img/langs/dotnet.png)](https://github.com/casbin-net/Casbin.NET) | [![c++](https://casbin.org/img/langs/cpp.png)](https://github.com/casbin/casbin-cpp) | [![rust](https://casbin.org/img/langs/rust.png)](https://github.com/casbin/casbin-rs) |
+| [![python](https://casbin.apache.org/img/langs/python.png)](https://github.com/casbin/pycasbin) | [![dotnet](https://casbin.apache.org/img/langs/dotnet.png)](https://github.com/casbin-net/Casbin.NET) | [![c++](https://casbin.apache.org/img/langs/cpp.png)](https://github.com/casbin/casbin-cpp) | [![rust](https://casbin.apache.org/img/langs/rust.png)](https://github.com/casbin/casbin-rs) |
 |------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------|
 | [PyCasbin](https://github.com/casbin/pycasbin)                                           | [Casbin.NET](https://github.com/casbin-net/Casbin.NET)                                         | [Casbin-CPP](https://github.com/casbin/casbin-cpp)                                   | [Casbin-RS](https://github.com/casbin/casbin-rs)                                      |
 | production-ready                                                                         | production-ready                                                                               | beta-test                                                                            | production-ready                                                                      |
@@ -140,15 +141,15 @@ For Maven:
 
 ## Documentation
 
-https://casbin.org/docs/overview
+https://casbin.apache.org/docs/overview
 
 ## Online editor
 
-You can also use the online editor (https://casbin.org/editor/) to write your jCasbin model and policy in your web browser. It provides functionality such as `syntax highlighting` and `code completion`, just like an IDE for a programming language.
+You can also use the online editor (https://casbin.apache.org/editor/) to write your jCasbin model and policy in your web browser. It provides functionality such as `syntax highlighting` and `code completion`, just like an IDE for a programming language.
 
 ## Tutorials
 
-https://casbin.org/docs/tutorials
+https://casbin.apache.org/docs/tutorials
 
 ## Get started
 
@@ -182,14 +183,14 @@ Note: you can also initialize an enforcer with policy in DB instead of file, see
 
 See [Policy management APIs](#policy-management) for more usage.
 
-4. Please refer to the [src/test](https://github.com/casbin/jcasbin/tree/master/src/test) package for more usage.
+4. Please refer to the [src/test](https://github.com/apache/casbin-jcasbin/tree/master/src/test) package for more usage.
 
 ## Policy management
 
 jCasbin provides two sets of APIs to manage permissions:
 
-- [Management API](https://github.com/casbin/jcasbin/blob/master/src/main/java/org/casbin/jcasbin/main/ManagementEnforcer.java): the primitive API that provides full support for jCasbin policy management. See [here](https://github.com/casbin/jcasbin/blob/master/src/test/java/org/casbin/jcasbin/main/ManagementAPIUnitTest.java) for examples.
-- [RBAC API](https://github.com/casbin/jcasbin/blob/master/src/main/java/org/casbin/jcasbin/main/Enforcer.java): a more friendly API for RBAC. This API is a subset of Management API. The RBAC users could use this API to simplify the code. See [here](https://github.com/casbin/jcasbin/blob/master/src/test/java/org/casbin/jcasbin/main/RbacAPIUnitTest.java) for examples.
+- [Management API](https://github.com/apache/casbin-jcasbin/blob/master/src/main/java/org/casbin/jcasbin/main/ManagementEnforcer.java): the primitive API that provides full support for jCasbin policy management. See [here](https://github.com/apache/casbin-jcasbin/blob/master/src/test/java/org/casbin/jcasbin/main/ManagementAPIUnitTest.java) for examples.
+- [RBAC API](https://github.com/apache/casbin-jcasbin/blob/master/src/main/java/org/casbin/jcasbin/main/Enforcer.java): a more friendly API for RBAC. This API is a subset of Management API. The RBAC users could use this API to simplify the code. See [here](https://github.com/apache/casbin-jcasbin/blob/master/src/test/java/org/casbin/jcasbin/main/RbacAPIUnitTest.java) for examples.
 
 We also provide a [web-based UI](https://github.com/casbin/web-ui) for model management and policy management:
 
@@ -199,35 +200,72 @@ We also provide a [web-based UI](https://github.com/casbin/web-ui) for model man
 
 ## Policy persistence
 
-https://casbin.org/docs/adapters
+https://casbin.apache.org/docs/adapters
 
 ## Role manager
 
-https://casbin.org/docs/role-managers
+https://casbin.apache.org/docs/role-managers
+
+## Expression Validation and Cross-Platform Compatibility
+
+Starting from version 1.98.1, jCasbin validates expressions to ensure cross-platform compatibility with other Casbin implementations (Go, Node.js, Python, .NET, etc.).
+
+### Restricted Syntax
+
+The following AviatorScript-specific features are **not allowed** in `eval()` expressions and policy rules:
+
+- **Namespace methods**: `seq.list()`, `string.startsWith()`, `string.endsWith()`, `math.sqrt()`, etc.
+- **Advanced control structures**: `lambda`, `let`, `fn`, `for`, `while`, `return`, `if-then-else`, `->`
+
+These features are restricted because they are specific to AviatorScript and would make policies incompatible with other Casbin implementations.
+
+### Allowed Syntax
+
+The following standard Casbin syntax is fully supported:
+
+- **Operators**: `&&`, `||`, `==`, `!=`, `<`, `>`, `<=`, `>=`, `+`, `-`, `*`, `/`, `!`, `in`
+- **Built-in functions**: `g()`, `keyMatch()`, `keyMatch2-5()`, `regexMatch()`, `ipMatch()`, `globMatch()`, `timeMatch()`, `eval()`
+- **Custom functions**: Users can still register custom functions using `enforcer.addFunction()`
+- **Variable access**: `r.attr`, `p.attr` (automatically escaped to `r_attr`, `p_attr`)
+
+### Example
+
+```java
+// ❌ NOT allowed - AviatorScript-specific syntax
+"eval(seq.list('admin', 'editor'))"
+"eval(string.startsWith(r.path, '/admin'))"
+
+// ✅ Allowed - Standard Casbin syntax
+"eval(r.age > 18 && r.age < 65)"
+"r.role in ('admin', 'editor')"  // Converted to include(tuple(...), ...)
+"g(r.sub, p.sub) && keyMatch(r.path, p.path)"
+```
+
+If an expression contains restricted syntax, it will be logged as a warning and return `false`.
 
 ## Examples
 
 | Model                     | Model file                                                                                                                        | Policy file                                                                                                                       |
 | ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| ACL                       | [basic_model.conf](https://github.com/casbin/jcasbin/blob/master/examples/basic_model.conf)                                       | [basic_policy.csv](https://github.com/casbin/jcasbin/blob/master/examples/basic_policy.csv)                                       |
-| ACL with superuser        | [basic_model_with_root.conf](https://github.com/casbin/jcasbin/blob/master/examples/basic_with_root_model.conf)                   | [basic_policy.csv](https://github.com/casbin/jcasbin/blob/master/examples/basic_policy.csv)                                       |
-| ACL without users         | [basic_model_without_users.conf](https://github.com/casbin/jcasbin/blob/master/examples/basic_without_users_model.conf)           | [basic_policy_without_users.csv](https://github.com/casbin/jcasbin/blob/master/examples/basic_without_users_policy.csv)           |
-| ACL without resources     | [basic_model_without_resources.conf](https://github.com/casbin/jcasbin/blob/master/examples/basic_without_resources_model.conf)   | [basic_policy_without_resources.csv](https://github.com/casbin/jcasbin/blob/master/examples/basic_without_resources_policy.csv)   |
-| RBAC                      | [rbac_model.conf](https://github.com/casbin/jcasbin/blob/master/examples/rbac_model.conf)                                         | [rbac_policy.csv](https://github.com/casbin/jcasbin/blob/master/examples/rbac_policy.csv)                                         |
-| RBAC with resource roles  | [rbac_model_with_resource_roles.conf](https://github.com/casbin/jcasbin/blob/master/examples/rbac_with_resource_roles_model.conf) | [rbac_policy_with_resource_roles.csv](https://github.com/casbin/jcasbin/blob/master/examples/rbac_with_resource_roles_policy.csv) |
-| RBAC with domains/tenants | [rbac_model_with_domains.conf](https://github.com/casbin/jcasbin/blob/master/examples/rbac_with_domains_model.conf)               | [rbac_policy_with_domains.csv](https://github.com/casbin/jcasbin/blob/master/examples/rbac_with_domains_policy.csv)               |
-| ABAC                      | [abac_model.conf](https://github.com/casbin/jcasbin/blob/master/examples/abac_model.conf)                                         | N/A                                                                                                                               |
-| RESTful                   | [keymatch_model.conf](https://github.com/casbin/jcasbin/blob/master/examples/keymatch_model.conf)                                 | [keymatch_policy.csv](https://github.com/casbin/jcasbin/blob/master/examples/keymatch_policy.csv)                                 |
-| Deny-override             | [rbac_model_with_deny.conf](https://github.com/casbin/jcasbin/blob/master/examples/rbac_with_deny_model.conf)                     | [rbac_policy_with_deny.csv](https://github.com/casbin/jcasbin/blob/master/examples/rbac_with_deny_policy.csv)                     |
-| Priority                  | [priority_model.conf](https://github.com/casbin/jcasbin/blob/master/examples/priority_model.conf)                                 | [priority_policy.csv](https://github.com/casbin/jcasbin/blob/master/examples/priority_policy.csv)                                 |
+| ACL                       | [basic_model.conf](https://github.com/apache/casbin-jcasbin/blob/master/examples/basic_model.conf)                                       | [basic_policy.csv](https://github.com/apache/casbin-jcasbin/blob/master/examples/basic_policy.csv)                                       |
+| ACL with superuser        | [basic_model_with_root.conf](https://github.com/apache/casbin-jcasbin/blob/master/examples/basic_with_root_model.conf)                   | [basic_policy.csv](https://github.com/apache/casbin-jcasbin/blob/master/examples/basic_policy.csv)                                       |
+| ACL without users         | [basic_model_without_users.conf](https://github.com/apache/casbin-jcasbin/blob/master/examples/basic_without_users_model.conf)           | [basic_policy_without_users.csv](https://github.com/apache/casbin-jcasbin/blob/master/examples/basic_without_users_policy.csv)           |
+| ACL without resources     | [basic_model_without_resources.conf](https://github.com/apache/casbin-jcasbin/blob/master/examples/basic_without_resources_model.conf)   | [basic_policy_without_resources.csv](https://github.com/apache/casbin-jcasbin/blob/master/examples/basic_without_resources_policy.csv)   |
+| RBAC                      | [rbac_model.conf](https://github.com/apache/casbin-jcasbin/blob/master/examples/rbac_model.conf)                                         | [rbac_policy.csv](https://github.com/apache/casbin-jcasbin/blob/master/examples/rbac_policy.csv)                                         |
+| RBAC with resource roles  | [rbac_model_with_resource_roles.conf](https://github.com/apache/casbin-jcasbin/blob/master/examples/rbac_with_resource_roles_model.conf) | [rbac_policy_with_resource_roles.csv](https://github.com/apache/casbin-jcasbin/blob/master/examples/rbac_with_resource_roles_policy.csv) |
+| RBAC with domains/tenants | [rbac_model_with_domains.conf](https://github.com/apache/casbin-jcasbin/blob/master/examples/rbac_with_domains_model.conf)               | [rbac_policy_with_domains.csv](https://github.com/apache/casbin-jcasbin/blob/master/examples/rbac_with_domains_policy.csv)               |
+| ABAC                      | [abac_model.conf](https://github.com/apache/casbin-jcasbin/blob/master/examples/abac_model.conf)                                         | N/A                                                                                                                               |
+| RESTful                   | [keymatch_model.conf](https://github.com/apache/casbin-jcasbin/blob/master/examples/keymatch_model.conf)                                 | [keymatch_policy.csv](https://github.com/apache/casbin-jcasbin/blob/master/examples/keymatch_policy.csv)                                 |
+| Deny-override             | [rbac_model_with_deny.conf](https://github.com/apache/casbin-jcasbin/blob/master/examples/rbac_with_deny_model.conf)                     | [rbac_policy_with_deny.csv](https://github.com/apache/casbin-jcasbin/blob/master/examples/rbac_with_deny_policy.csv)                     |
+| Priority                  | [priority_model.conf](https://github.com/apache/casbin-jcasbin/blob/master/examples/priority_model.conf)                                 | [priority_policy.csv](https://github.com/apache/casbin-jcasbin/blob/master/examples/priority_policy.csv)                                 |
 
 ## Middlewares
 
-Authz middlewares for web frameworks: https://casbin.org/docs/middlewares
+Authz middlewares for web frameworks: https://casbin.apache.org/docs/middlewares
 
 ## Our adopters
 
-https://casbin.org/docs/adopters
+https://casbin.apache.org/docs/adopters
 
 ## Spring Boot support
 
@@ -247,28 +285,11 @@ https://github.com/jcasbin/casbin-spring-boot-starter
 ## Contributors
 
 This project exists thanks to all the people who contribute.
-<a href="https://github.com/casbin/jcasbin/graphs/contributors"><img src="https://opencollective.com/jcasbin/contributors.svg?width=890&button=false" /></a>
+<a href="https://github.com/apache/casbin-jcasbin/graphs/contributors"><img src="https://opencollective.com/jcasbin/contributors.svg?width=890&button=false" /></a>
 
-## Backers
+## Star History
 
-Thank you to all our backers! 🙏 [[Become a backer](https://opencollective.com/casbin#backer)]
-
-<a href="https://opencollective.com/casbin#backers" target="_blank"><img src="https://opencollective.com/casbin/backers.svg?width=890"></a>
-
-## Sponsors
-
-Support this project by becoming a sponsor. Your logo will show up here with a link to your website. [[Become a sponsor](https://opencollective.com/casbin#sponsor)]
-
-<a href="https://opencollective.com/casbin/sponsor/0/website" target="_blank"><img src="https://opencollective.com/casbin/sponsor/0/avatar.svg"></a>
-<a href="https://opencollective.com/casbin/sponsor/1/website" target="_blank"><img src="https://opencollective.com/casbin/sponsor/1/avatar.svg"></a>
-<a href="https://opencollective.com/casbin/sponsor/2/website" target="_blank"><img src="https://opencollective.com/casbin/sponsor/2/avatar.svg"></a>
-<a href="https://opencollective.com/casbin/sponsor/3/website" target="_blank"><img src="https://opencollective.com/casbin/sponsor/3/avatar.svg"></a>
-<a href="https://opencollective.com/casbin/sponsor/4/website" target="_blank"><img src="https://opencollective.com/casbin/sponsor/4/avatar.svg"></a>
-<a href="https://opencollective.com/casbin/sponsor/5/website" target="_blank"><img src="https://opencollective.com/casbin/sponsor/5/avatar.svg"></a>
-<a href="https://opencollective.com/casbin/sponsor/6/website" target="_blank"><img src="https://opencollective.com/casbin/sponsor/6/avatar.svg"></a>
-<a href="https://opencollective.com/casbin/sponsor/7/website" target="_blank"><img src="https://opencollective.com/casbin/sponsor/7/avatar.svg"></a>
-<a href="https://opencollective.com/casbin/sponsor/8/website" target="_blank"><img src="https://opencollective.com/casbin/sponsor/8/avatar.svg"></a>
-<a href="https://opencollective.com/casbin/sponsor/9/website" target="_blank"><img src="https://opencollective.com/casbin/sponsor/9/avatar.svg"></a>
+[![Star History Chart](https://star-history.dera.page/svg?repos=apache/casbin-jcasbin&type=Date)](https://star-history.dera.page/#apache/casbin-jcasbin&type=date)
 
 ## License
 
@@ -278,6 +299,13 @@ This project is licensed under the [Apache 2.0 license](LICENSE).
 
 If you have any issues or feature requests, please contact us. PR is welcomed.
 
-- https://github.com/casbin/jcasbin/issues
-- hsluoyz@gmail.com
-- Tencent QQ group: [546057381](//shang.qq.com/wpa/qunwpa?idkey=8ac8b91fc97ace3d383d0035f7aa06f7d670fd8e8d4837347354a31c18fac885)
+- https://github.com/apache/casbin-jcasbin/issues
+- https://discord.gg/S5UjpzGZjN
+
+## Incubation status
+
+Apache Casbin (Incubating) is an effort undergoing incubation at the Apache Software Foundation (ASF), sponsored by the Apache Incubator PMC.
+
+Incubation is required of all newly accepted projects until a further review indicates that the infrastructure, communications, and decision making process have stabilized in a manner consistent with other successful ASF projects.
+
+While incubation status is not necessarily a reflection of the completeness or stability of the code, it does indicate that the project has yet to be fully endorsed by the ASF.

@@ -1,16 +1,19 @@
-// Copyright 2018 The casbin Authors. All Rights Reserved.
+// Licensed to the Apache Software Foundation (ASF) under one
+// or more contributor license agreements. See the NOTICE file
+// distributed with this work for additional information
+// regarding copyright ownership. The ASF licenses this file
+// to you under the Apache License, Version 2.0 (the
+// "License"); you may not use this file except in compliance
+// with the License. You may obtain a copy of the License at
 //
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
+//     https://www.apache.org/licenses/LICENSE-2.0
 //
-//      http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+// Unless required by applicable law or agreed to in writing,
+// software distributed under the License is distributed on an
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// KIND, either express or implied. See the License for the
+// specific language governing permissions and limitations
+// under the License.
 
 package org.casbin.jcasbin.util;
 
@@ -276,6 +279,41 @@ public class BuiltInFunctions {
     }
 
     /**
+     * KeyGet3 returns value matched pattern. For example, "/resource1" matches "/{resource}", if the pathVar == "resource", then "resource1" will be returned.
+     * This is similar with KeyGet2(), except using "/proxy/{id}" instead of "/proxy/:id".
+     *
+     * @param key1    the first argument.
+     * @param key2    the second argument.
+     * @param pathVar the name of the variable to retrieve from the matched pattern.
+     * @return the matched part.
+     */
+    public static String keyGet3Func(String key1, String key2, String pathVar) {
+        key2 = key2.replace("/*", "/.*");
+        String regexp = "\\{[^/]+?\\}";
+        Pattern re = Pattern.compile(regexp);
+        Matcher keys = re.matcher(key2);
+        List<String> keysList = new ArrayList<>();
+        while (keys.find()) {
+            keysList.add(keys.group());
+        }
+        key2 = re.matcher(key2).replaceAll("([^/]+?)");
+        // Escape { and } for Java regex compatibility since { is treated as repetition quantifier
+        key2 = key2.replace("{", "\\{").replace("}", "\\}");
+        key2 = "^" + key2 + "$";
+        Pattern re2 = Pattern.compile(key2);
+        Matcher values = re2.matcher(key1);
+        if (!values.find()) {
+            return "";
+        }
+        for (int i = 0; i < keysList.size(); i++) {
+            if (pathVar.equals(keysList.get(i).substring(1, keysList.get(i).length() - 1))) {
+                return values.group(i + 1);
+            }
+        }
+        return "";
+    }
+
+    /**
      * regexMatch determines whether key1 matches the pattern of key2 in regular expression.
      *
      * @param key1 the first argument.
@@ -488,6 +526,15 @@ public class BuiltInFunctions {
      * @return the result of the eval.
      */
     public static boolean eval(String eval, Map<String, Object> env, AviatorEvaluatorInstance aviatorEval) {
+        // Validate expression to block AviatorScript-specific features
+        // that break cross-platform compatibility
+        try {
+            ExpressionValidator.validateExpression(eval);
+        } catch (IllegalArgumentException e) {
+            Util.logPrintfWarn("Expression validation failed: {}", e.getMessage());
+            return false;
+        }
+        
         boolean res;
         if (aviatorEval != null) {
             try {

@@ -1,16 +1,19 @@
-// Copyright 2020 The casbin Authors. All Rights Reserved.
+// Licensed to the Apache Software Foundation (ASF) under one
+// or more contributor license agreements. See the NOTICE file
+// distributed with this work for additional information
+// regarding copyright ownership. The ASF licenses this file
+// to you under the Apache License, Version 2.0 (the
+// "License"); you may not use this file except in compliance
+// with the License. You may obtain a copy of the License at
 //
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
+//     https://www.apache.org/licenses/LICENSE-2.0
 //
-//      http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+// Unless required by applicable law or agreed to in writing,
+// software distributed under the License is distributed on an
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// KIND, either express or implied. See the License for the
+// specific language governing permissions and limitations
+// under the License.
 
 package org.casbin.jcasbin.main;
 
@@ -18,7 +21,7 @@ import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.casbin.jcasbin.util.SyncedLRUCache;
 import org.casbin.jcasbin.util.Util;
-import org.junit.Test;
+import org.testng.annotations.Test;
 import org.mockito.ArgumentMatchers;
 import org.mockito.BDDMockito;
 import org.mockito.MockedConstruction;
@@ -27,7 +30,7 @@ import org.mockito.MockedStatic;
 import java.io.IOException;
 import java.io.StringReader;
 
-import static org.junit.Assert.*;
+import static org.testng.Assert.*;
 import static org.mockito.ArgumentMatchers.*;
 
 public class UtilTest {
@@ -55,10 +58,28 @@ public class UtilTest {
 
     @Test
     public void testConvertInSyntax(){
+        // Basic cases
         assertEquals("include(r_obj, r_sub)", Util.convertInSyntax("r_sub in r_obj"));
         assertEquals("include(r_obj, r_sub.name)", Util.convertInSyntax("r_sub.name in r_obj"));
         assertEquals("include(r_obj.name, r_sub.name)", Util.convertInSyntax("r_sub.name in r_obj.name"));
         assertEquals("include(r_obj, r_sub) && r.obj == p.obj", Util.convertInSyntax("r_sub in r_obj && r.obj == p.obj"));
+        
+        // Tuple/array with single quotes - should convert to tuple() function
+        assertEquals("include(tuple('data2', 'data3'), r.obj)", Util.convertInSyntax("r.obj in ('data2', 'data3')"));
+        
+        // Tuple/array with double quotes - should convert to tuple() function
+        assertEquals("include(tuple(\"data2\", \"data3\"), r.obj)", Util.convertInSyntax("r.obj in (\"data2\", \"data3\")"));
+        
+        // Tuple/array without quotes - should convert to tuple() function
+        assertEquals("include(tuple(data2, data3), r.obj)", Util.convertInSyntax("r.obj in (data2, data3)"));
+        
+        // Complex expression with 'in' operator and tuple (the original issue scenario)
+        assertEquals("g(r.sub, p.sub) && r.obj == p.obj && r.act == p.act || include(tuple('data2', 'data3'), r.obj)", 
+                     Util.convertInSyntax("g(r.sub, p.sub) && r.obj == p.obj && r.act == p.act || r.obj in ('data2', 'data3')"));
+        
+        // Multiple 'in' operators
+        assertEquals("include(r.obj.admins, r.sub.name) && include(r.obj.admins, (\"bob\"))", 
+                     Util.convertInSyntax("r.sub.name in r.obj.admins && (\"bob\") in r.obj.admins"));
     }
 
   @Test
@@ -73,15 +94,15 @@ public class UtilTest {
   @Test
   public void testSplitCommaDelimited(){
     assertNull(Util.splitCommaDelimited(null));
-    assertArrayEquals(new String[]{"a", "b", "c"}, Util.splitCommaDelimited("a,b,c"));
-    assertArrayEquals(new String[]{"a", "b", "c"}, Util.splitCommaDelimited("a, b, c"));
-    assertArrayEquals(new String[]{"a", "b", "c"}, Util.splitCommaDelimited("a ,b ,c"));
-    assertArrayEquals(new String[]{"a", "b", "c"}, Util.splitCommaDelimited("  a,     b   ,c     "));
-    assertArrayEquals(new String[]{"a,b,c", "d,e", "f"}, Util.splitCommaDelimited("\"a,b,c\", \"d,e\", f"));
-    assertArrayEquals(new String[]{"a", "b", "c"}, Util.splitCommaDelimited("\"a\", \"b\", \"c\""));
-    assertArrayEquals(new String[]{"\"a", "\"b\"", "c\""}, Util.splitCommaDelimited("\"\"\"a\",\"\"\"b\"\"\",\"c\"\"\""));
-    assertArrayEquals(new String[]{"\"a", "\"b\"", "c\""}, Util.splitCommaDelimited("\"\"\"a\",\"\"\"b\"\"\",\"c\"\"\""));
-    assertArrayEquals(new String[]{"a b", "c", "d"}, Util.splitCommaDelimited("\"a b\", c, d"));
+    assertEquals(new String[]{"a", "b", "c"}, Util.splitCommaDelimited("a,b,c"));
+    assertEquals(new String[]{"a", "b", "c"}, Util.splitCommaDelimited("a, b, c"));
+    assertEquals(new String[]{"a", "b", "c"}, Util.splitCommaDelimited("a ,b ,c"));
+    assertEquals(new String[]{"a", "b", "c"}, Util.splitCommaDelimited("  a,     b   ,c     "));
+    assertEquals(new String[]{"a,b,c", "d,e", "f"}, Util.splitCommaDelimited("\"a,b,c\", \"d,e\", f"));
+    assertEquals(new String[]{"a", "b", "c"}, Util.splitCommaDelimited("\"a\", \"b\", \"c\""));
+    assertEquals(new String[]{"\"a", "\"b\"", "c\""}, Util.splitCommaDelimited("\"\"\"a\",\"\"\"b\"\"\",\"c\"\"\""));
+    assertEquals(new String[]{"\"a", "\"b\"", "c\""}, Util.splitCommaDelimited("\"\"\"a\",\"\"\"b\"\"\",\"c\"\"\""));
+    assertEquals(new String[]{"a b", "c", "d"}, Util.splitCommaDelimited("\"a b\", c, d"));
   }
 
   @Test
